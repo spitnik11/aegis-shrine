@@ -1,0 +1,31 @@
+.godot/
+*.tmp
+
+# Secrets and local credentials
+.env
+.env.*
+!.env.example
+!.env.sample
+*.pem
+*.key
+*.pfx
+*.p12
+*.crt
+secrets.*
+credentials.*
+*_secret*
+*_token*
+service-account*.json
+.npmrc
+
+# Local tooling and generated output
+.venv/
+venv/
+node_modules/
+dist/
+build/
+*.log
+.cache/
+Thumbs.db
+.idea/
+.vscode/
