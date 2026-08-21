@@ -4,3 +4,8 @@ Generated art enters the game only as copied static files under `art/`. The game
 
 Terrain uses atomic 64x32-footprint assets packed deterministically after approval. Character sheets expose four logical isometric directions: `dl`, `dr`, `ul`, and `ur`. Mirrored right-facing art is allowed temporarily, but all four animation names must exist.
 
+## MVP provenance
+
+- `art/tiles/grass.png`: generated through the unmodified Z-Image Studio API, seed `87214021`, then cropped and nearest-neighbor hardened in the game workspace.
+- `art/characters/slime/slime.png`: generated through the unmodified Z-Image Studio API, seed `87214022`, then packed into four bobbing frames in the game workspace.
+- `art/characters/guardian/guardian.png`: copied from Frame Motion Studio's committed `assets/showcase/godot-overworld/spritesheet.png` export.
