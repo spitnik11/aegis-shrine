@@ -6,4 +6,5 @@
 - Upper-left lighting and consistent shadows
 - Limited shared palette, hard pixel edges, nearest filtering
 - No anti-aliasing, painterly gradients, photorealism, or perspective drift
-
+- Terrain and road assets must share the exact same diamond footprint so neighboring tiles meet edge-to-edge
+- Props use bottom-center anchors and retain a small matching grass base to blend into the map

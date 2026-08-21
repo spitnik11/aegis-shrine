@@ -18,6 +18,7 @@ const PATH_CELLS: Array[Vector2i] = [
 	Vector2i(8, 5), Vector2i(9, 5), Vector2i(10, 5), Vector2i(11, 5),
 	Vector2i(12, 5), Vector2i(13, 5), Vector2i(14, 5)
 ]
+const DECOR_CELLS: Array[Vector2i] = [Vector2i(2, 2), Vector2i(4, 8), Vector2i(10, 2), Vector2i(12, 8)]
 
 @onready var ground: TileMapLayer = $Ground
 @onready var roads: TileMapLayer = $Roads
@@ -65,6 +66,7 @@ func _run_self_check() -> void:
 	assert(PATH_CELLS.front() == Vector2i(0, 5))
 	assert(PATH_CELLS.back() == Vector2i(14, 5))
 	assert(TOWER_DAMAGE * 3 == ENEMY_HP)
+	assert(PATH_CELLS.size() == 15)
 
 
 func _build_grid() -> void:
@@ -76,6 +78,7 @@ func _build_grid() -> void:
 	ground.tile_set = tile_set
 	roads.tile_set = tile_set
 	var texture: Texture2D = load("res://art/tiles/grass.png")
+	var road_texture: Texture2D = load("res://art/tiles/road.png")
 	for y in MAP_SIZE.y:
 		for x in MAP_SIZE.x:
 			var cell := Vector2i(x, y)
@@ -83,14 +86,33 @@ func _build_grid() -> void:
 			sprite.texture = texture
 			sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			sprite.position = ground.map_to_local(cell) + Vector2(0, -8)
-			sprite.modulate = Color("d8f0a4") if (x + y) % 2 == 0 else Color.WHITE
+			sprite.flip_h = (x * 3 + y) % 4 == 0
 			ground.add_child(sprite)
 	for cell in PATH_CELLS:
-		var road := Polygon2D.new()
-		road.position = roads.map_to_local(cell)
-		road.polygon = PackedVector2Array([Vector2(0, -12), Vector2(30, 3), Vector2(0, 18), Vector2(-30, 3)])
-		road.color = Color("c99a5b")
+		var road := Sprite2D.new()
+		road.texture = road_texture
+		road.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+		road.position = roads.map_to_local(cell) + Vector2(0, -8)
 		roads.add_child(road)
+	_add_environment_props()
+
+
+func _add_environment_props() -> void:
+	_add_prop("res://art/props/shrine.png", PATH_CELLS.back(), Vector2(0, -42), 1.0).z_index = 2
+	for cell in DECOR_CELLS:
+		_add_prop("res://art/props/bush.png", cell, Vector2(0, -28), 0.9)
+
+
+func _add_prop(path: String, cell: Vector2i, offset: Vector2, scale_factor: float) -> Node2D:
+	var root := Node2D.new()
+	root.position = ground.to_global(ground.map_to_local(cell)) + offset
+	var sprite := Sprite2D.new()
+	sprite.texture = load(path)
+	sprite.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	sprite.scale = Vector2.ONE * scale_factor
+	root.add_child(sprite)
+	actors.add_child(root)
+	return root
 
 
 func _build_route() -> void:
@@ -154,7 +176,14 @@ func _place_tower(cell: Vector2i) -> void:
 
 
 func _is_buildable(cell: Vector2i) -> bool:
-	return cell.x >= 0 and cell.y >= 0 and cell.x < MAP_SIZE.x and cell.y < MAP_SIZE.y and cell not in PATH_CELLS and not occupied.has(cell)
+	return cell.x >= 0 and cell.y >= 0 and cell.x < MAP_SIZE.x and cell.y < MAP_SIZE.y and cell not in PATH_CELLS and not _touches_decor(cell) and not occupied.has(cell)
+
+
+func _touches_decor(cell: Vector2i) -> bool:
+	for decor_cell in DECOR_CELLS:
+		if ground.map_to_local(cell).distance_to(ground.map_to_local(decor_cell)) < 70.0:
+			return true
+	return false
 
 
 func _start_wave() -> void:

@@ -29,4 +29,15 @@ One Guardian completed all three waves with four shrine lives remaining. The no-
 ## Deferred polish
 
 - Unique right-facing Guardian art instead of logical direction reuse
-- Shrine prop, environment decoration, audio, hit flash, and impact particles
+- Audio, hit flash, and impact particles
+
+## Environment polish milestone — complete
+
+- [x] Grass tiles connect on the Godot isometric grid without gaps
+- [x] Deterministic road tiles replace the flat road overlay and connect continuously
+- [x] Generated shrine anchors the route endpoint
+- [x] Generated flowering bushes break up grass repetition
+- [x] Explicit draw order: ground → roads → actors/enemies → projectiles → hover → HUD
+- [x] Shrine renders over arriving enemies
+- [x] Decoration footprints reject overlapping tower placement
+- [x] Real Godot render visually verified at 1280x720
