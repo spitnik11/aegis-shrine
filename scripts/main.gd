@@ -14,11 +14,15 @@ const ENEMY_REWARD := 10
 const WAVES := [3, 5, 7]
 const PATH_CELLS: Array[Vector2i] = [
 	Vector2i(0, 5), Vector2i(1, 5), Vector2i(2, 5), Vector2i(3, 5),
-	Vector2i(4, 5), Vector2i(5, 5), Vector2i(6, 5), Vector2i(7, 5),
-	Vector2i(8, 5), Vector2i(9, 5), Vector2i(10, 5), Vector2i(11, 5),
+	Vector2i(3, 4), Vector2i(4, 4), Vector2i(5, 4), Vector2i(6, 4),
+	Vector2i(6, 5), Vector2i(7, 5), Vector2i(8, 5), Vector2i(8, 6),
+	Vector2i(9, 6), Vector2i(10, 6), Vector2i(11, 6), Vector2i(11, 5),
 	Vector2i(12, 5), Vector2i(13, 5), Vector2i(14, 5)
 ]
-const DECOR_CELLS: Array[Vector2i] = [Vector2i(2, 2), Vector2i(4, 8), Vector2i(10, 2), Vector2i(12, 8)]
+const BUSH_CELLS: Array[Vector2i] = [Vector2i(2, 2), Vector2i(4, 8), Vector2i(10, 2), Vector2i(12, 8)]
+const TREE_CELLS: Array[Vector2i] = [Vector2i(0, 1), Vector2i(1, 9), Vector2i(5, 1), Vector2i(8, 9), Vector2i(13, 1), Vector2i(14, 9)]
+const ROCK_CELLS: Array[Vector2i] = [Vector2i(3, 1), Vector2i(6, 9), Vector2i(11, 1), Vector2i(13, 7)]
+const STUMP_CELLS: Array[Vector2i] = [Vector2i(6, 2), Vector2i(9, 8)]
 
 @onready var ground: TileMapLayer = $Ground
 @onready var roads: TileMapLayer = $Roads
@@ -66,7 +70,10 @@ func _run_self_check() -> void:
 	assert(PATH_CELLS.front() == Vector2i(0, 5))
 	assert(PATH_CELLS.back() == Vector2i(14, 5))
 	assert(TOWER_DAMAGE * 3 == ENEMY_HP)
-	assert(PATH_CELLS.size() == 15)
+	assert(PATH_CELLS.size() == 19)
+	for index in range(1, PATH_CELLS.size()):
+		var step := PATH_CELLS[index] - PATH_CELLS[index - 1]
+		assert(abs(step.x) + abs(step.y) == 1)
 
 
 func _build_grid() -> void:
@@ -99,8 +106,14 @@ func _build_grid() -> void:
 
 func _add_environment_props() -> void:
 	_add_prop("res://art/props/shrine.png", PATH_CELLS.back(), Vector2(0, -42), 1.0).z_index = 2
-	for cell in DECOR_CELLS:
+	for cell in BUSH_CELLS:
 		_add_prop("res://art/props/bush.png", cell, Vector2(0, -28), 0.9)
+	for cell in TREE_CELLS:
+		_add_prop("res://art/props/sacred_pine.png", cell, Vector2(0, -48), 1.0)
+	for cell in ROCK_CELLS:
+		_add_prop("res://art/props/moss_boulder.png", cell, Vector2(0, -18), 1.0)
+	for cell in STUMP_CELLS:
+		_add_prop("res://art/props/lantern_stump.png", cell, Vector2(0, -24), 1.0)
 
 
 func _add_prop(path: String, cell: Vector2i, offset: Vector2, scale_factor: float) -> Node2D:
@@ -180,7 +193,7 @@ func _is_buildable(cell: Vector2i) -> bool:
 
 
 func _touches_decor(cell: Vector2i) -> bool:
-	for decor_cell in DECOR_CELLS:
+	for decor_cell in BUSH_CELLS + TREE_CELLS + ROCK_CELLS + STUMP_CELLS:
 		if ground.map_to_local(cell).distance_to(ground.map_to_local(decor_cell)) < 70.0:
 			return true
 	return false

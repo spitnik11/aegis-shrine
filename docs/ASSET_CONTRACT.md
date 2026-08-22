@@ -12,6 +12,9 @@ Terrain uses atomic 64x32-footprint assets packed deterministically after approv
 - `art/tiles/road.png`: deterministically derived from the approved grass tile so every edge and footprint remains identical.
 - `art/props/shrine.png`: generated through the unmodified Z-Image Studio API, seed `87214023`, then cropped and nearest-neighbor hardened in the game workspace.
 - `art/props/bush.png`: generated through the unmodified Z-Image Studio API, seed `87214024`, then cropped and nearest-neighbor hardened in the game workspace.
+- `art/props/sacred_pine.png`, `moss_boulder.png`, and `lantern_stump.png`: original native-grid assets generated deterministically by `tools/generate_forest_assets.py`; no external runtime or model is required.
+
+Three RDXL forest-prop candidates (seeds `844101`-`844103`) were rejected because they were composed scenes rather than isolated transparent assets. They remain outside this repository and are not game provenance.
 
 ## Layer contract
 

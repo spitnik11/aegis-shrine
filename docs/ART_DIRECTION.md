@@ -67,6 +67,13 @@ Four fixed-seed candidates were generated through the unmodified Z-Image Studio 
 | Three-view guardian | 96x48 | Views stayed unusually coherent and readable | Best reference sheet; split and normalize before use |
 | Isometric path tile | 64x32 | Source used a square diamond and noisy highlights, not a clean 2:1 footprint | Reject; generate or draw a clean mask first, then texture within it |
 
+## Forest quality pass, 2026-08-22
+
+- A forest reads as a system: edge-framing canopy, repeated understory, obstacle-scale rocks, and sparse warm landmark props around a connected route.
+- Three fixed-seed atomic-prop prompts returned composed forest illustrations. They were rejected rather than cropped into ambiguous assets.
+- The missing pine, moss boulder, and lantern stump were authored deterministically on a native pixel grid, with binary alpha and bottom-center contact anchors.
+- The first zigzag route exposed diagonal gaps in the live render. The approved route uses orthogonally adjacent cells; diagonal movement requires explicit transition tiles.
+
 ## Source ranking
 
 1. [GDQuest: Pixel art setup in Godot 4](https://www.gdquest.com/library/pixel_art_setup_godot4/) - strongest practical engine guidance on filtering, base resolution, scaling modes, and integer scaling.
